@@ -41,6 +41,8 @@ const examples = [
 export default async function Index() {
   const supabase = createServerComponentClient({ cookies })
 
+  const { data: todos } = await supabase.from("profile").select();
+
   const {
     data: { user },
   } = await supabase.auth.getUser()
@@ -85,6 +87,14 @@ export default async function Index() {
           <div className="bg-foreground py-3 px-6 rounded-lg font-mono text-sm text-background">
             Get started by editing <strong>app/page.tsx</strong>
           </div>
+        </div>
+
+        <div>
+          <ul>
+            {todos?.map((todo) => (
+              <li key={todo.id}>{todo.title}</li>
+            ))}
+          </ul>
         </div>
 
         <div className="w-full p-[1px] bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />

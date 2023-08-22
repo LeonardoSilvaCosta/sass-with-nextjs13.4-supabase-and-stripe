@@ -8,7 +8,13 @@ export async function POST(request: Request) {
   const requestUrl = new URL(request.url)
   const supabase = createRouteHandlerClient({ cookies })
 
-  await supabase.auth.signOut()
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (session) {
+    await supabase.auth.signOut()
+  }
 
   return NextResponse.redirect(`${requestUrl.origin}/login`, {
     // a 301 status is required to redirect from a POST to a GET route

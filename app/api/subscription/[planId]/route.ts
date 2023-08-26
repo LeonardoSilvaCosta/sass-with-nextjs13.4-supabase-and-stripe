@@ -38,8 +38,8 @@ export async function GET(req: NextRequest) {
         mode: 'subscription',
         payment_method_types: ['card'],
         line_items: lineItems,
-        success_url: 'http://localhost:3000/payment/sucess',
-        cancel_url: 'http://localhost:3000/payment/cancelled',
+        success_url: `${process.env.BASE_URL}/payment/sucess`,
+        cancel_url: `${process.env.BASE_URL}/payment/cancelled`,
       })
 
       return NextResponse.json({ id: session.id }, { status: 200 });

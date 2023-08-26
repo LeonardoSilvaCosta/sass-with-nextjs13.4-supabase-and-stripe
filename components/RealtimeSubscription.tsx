@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import ManageSubscriptionButton from "./ManageSubscriptionButton";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import Link from "next/link";
 
 interface RealtimeSubscriptionProps {
   profileData: Profile
@@ -50,7 +51,12 @@ export default function RealtimeSubscription({ profileData }: RealtimeSubscripti
             : "Not subscribed"
         }
       </p>
-      <ManageSubscriptionButton />
+      {
+        profile.is_subscribed 
+        ?  <ManageSubscriptionButton />
+        : <Link href="/pricing" className="text-black bg-white">Subscribe</Link>
+      }
+     
     </div>
   )
 }

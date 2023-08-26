@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
   });
 
   try {
-    const { data, error } = await supabase
+    await supabase
       .from('profile')
       .update({ stripe_customer: customer.id })
       .eq('id', requestBody.record.id);

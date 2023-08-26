@@ -14,7 +14,7 @@ export default function AuthButton({ provider }: AuthButtonProps) {
     const { error } = await supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: process.env.NEXT_PUBLIC_REDIRECT_URL,
+        redirectTo: process.env.NEXT_PUBLIC_CALLBACK_URL
       },
     });
 

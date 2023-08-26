@@ -12,6 +12,6 @@ export default function ManageSubscriptionButton() {
   }
 
   return (
-    <button onClick={() => loadPortal()}>Manage subscription</button>
+    <button className="bg-white text-black" onClick={() => loadPortal()}>Manage subscription</button>
   );
 }

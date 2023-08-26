@@ -8,6 +8,7 @@ type SubscribeButtonProps = {
 const stripePromise = loadStripe(String(process.env.NEXT_PUBLIC_STRIPE_KEY));
 
 export default function SubscribeButton({ planId }: SubscribeButtonProps) {
+  
   const processSubscription = async (planId: string) => {
     const res = await fetch(`/api/subscription/${planId}`);
     const { id } = await res.json();

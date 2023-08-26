@@ -1,4 +1,4 @@
-import { NextResponse, NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { cookies } from 'next/headers'
 import Stripe from "stripe";
@@ -8,7 +8,8 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: "2023-08-16",
 });
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextResponse) {
+
   const supabase = createRouteHandlerClient({ cookies })
   const { data } = await supabase.auth.getUser();
 
@@ -24,33 +25,17 @@ export async function GET(req: NextRequest) {
       .eq("id", data.user.id)
       .single();
 
-    const priceId = req.url.split('/').pop()
+    const session = await stripe.billingPortal.sessions.create({
+      customer: stripe_customer?.stripe_customer,
+      return_url: "http://localhost:3000/dashboard"
+    })
 
-    const lineItems = [{
-      price: priceId,
-      quantity: 1,
-    }]
+    return NextResponse.json({ url: session.url }, { status: 200 });
 
-    try {
-
-      const session = await stripe.checkout.sessions.create({
-        customer: stripe_customer?.stripe_customer,
-        mode: 'subscription',
-        payment_method_types: ['card'],
-        line_items: lineItems,
-        success_url: 'http://localhost:3000/payment/sucess',
-        cancel_url: 'http://localhost:3000/payment/cancelled',
-      })
-
-      return NextResponse.json({ id: session.id }, { status: 200 });
-
-
-    } catch (error) {
-      console.log(error)
-    }
   } catch (error: any) {
     return new NextResponse(error, {
       status: 400,
     });
   }
+
 }

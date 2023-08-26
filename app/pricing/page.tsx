@@ -26,17 +26,18 @@ export default async function Pricing() {
   const showManageSubscription = !!data.user && profile.is_subscribed;
 
   const plans = await Promise.all(prices.map(async (price) => {
-    const product = await stripe.products.retrieve(price.product);    
+    const product = await stripe.products.retrieve(price.product);
     return {
       id: price.id,
       name: product.name,
       price: price.unit_amount,
       interval: price.recurring?.interval,
-      currency: price.currency
+      currency: price.currency,
+      isActive: price.active
     }
   }))
 
-  const sortedPlans = plans.sort((a, b) => a.price - b.price)
+  const sortedPlans = plans.sort((a, b) => a.price - b.price).filter((e) => e.isActive)
 
   return (
     <div className="text-white w-full max-w-3xl mx-auto py-16 flex justify-around">
@@ -48,7 +49,7 @@ export default async function Pricing() {
           </p>
           {showSubscribeButton && <SubscribeButton planId={plan.id} />}
           {showCreateAccountButton && <Link href="/login">Create Account</Link>}
-          {showManageSubscription && <button>Manage Subscription</button>}
+          {showManageSubscription && <Link href="/dashboard"><a>Manage Subscription</a></Link>}
         </div>
       ))}
     </div>
